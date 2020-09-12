@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {StyleSheet, View, TextInput, Button, Text} from 'react-native';
 import {Formik} from 'formik';
+import * as yup from 'yup';
 // https://rocksystem6611.hatenablog.com/entry/reactnative03
 // サンプルサイト
 
@@ -57,9 +58,12 @@ export default class App extends Component {
           //------------------Formikのpropsをセットする部分------------------//
           initialValues={{text: ''}} //フォーム変数の最初の値
           onSubmit={(values) => alert('問題ありません')} //submitをクリックしたら関数を実行する
-          validate={validate} //入力チェックの関数(エラーがあったらonSubmitは実行されない)
+          // validate={validate}
+          //入力チェックの関数(エラーがあったらonSubmitは実行されない)
           //---------------------------------------------------------------//
-        >
+          validationSchema={yup.object().shape({
+            text: yup.string().min(6).required(),
+          })}>
           {/*色々なステートやヘルパーがpropsとして使えます*/}
           {({
             values,
@@ -76,7 +80,7 @@ export default class App extends Component {
                   value={values.text}
                   onChangeText={handleChange('text')}
                   placeholder="Input Box"
-                  onBlur={handleBlur('text')}
+                  onBlur={() => setFieldTouched('text')}
                   //----------------------------------------------------------------//
                 />
                 {
