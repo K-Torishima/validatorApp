@@ -14,31 +14,35 @@ export default class App extends Component {
     return (
       <View style={styles.container}>
       <Formik 
-        initialValues={{ text: ''}}
-        onSubmit={values => alert("問題ありません")}
+        initialValues={{ text1: '', text2: '',}}
         validationSchema={validationSchema} //validationSchemaの追加
         >
         {({ values, touched, errors, handleChange, handleBlur, handleSubmit }) => {
           return (
             <View>
               <TextInput
-                value={values.text}
-                onChangeText={handleChange('text')}
+                value={values.text1}
+                onChangeText={handleChange('text1')}
                 placeholder="Input Box"
                 onBlur={handleBlur('text')}
+                handleSubmit = {handleSubmit}
               />
-              {
-                //touchedとerrorはtrueでしたらエラーメッセージを出力します
-                touched.text && errors.text &&
-                <Text style={styles.error}>{errors.text}</Text>
-              } 
+              { touched.text1 && errors.text1 && <Text style={styles.error}>{errors.text1}</Text> } 
               <Button 
                 title='登録'
                 onPress = {handleSubmit}
               />
+              <TextInput
+                value={values.text2}
+                onChangeText={handleChange('text2')}
+                placeholder="Input Box"
+                onBlur={handleBlur('text')}
+                handleSubmit = {handleSubmit}
+              />
+              { touched.text2 && errors.text2 && <Text style={styles.error}>{errors.text2}</Text> } 
             </View>  
           );
-      }}        
+      }}
       </Formik>
       </View>
     );
@@ -47,9 +51,12 @@ export default class App extends Component {
 
 //YupのvalidationSchema
 const validationSchema = yup.object().shape({
-  text: yup
+  text1: yup
     .string() //型は文字列
-    .max(10, '10文字以下を入れてください')　//11文字以上だったらerrors.textは「10文字以下を入れてください」になる
+    .max(20, '10文字以下を入れてください'),
+  text2: yup
+    .string() //型は文字列
+    .max(10, '10文字以下を入れてください'),//11文字以上だったらerrors.textは「10文字以下を入れてください」になる
 });
 
 
