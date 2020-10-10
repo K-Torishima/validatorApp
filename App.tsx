@@ -1,57 +1,66 @@
+import React, {Component} from 'react';
+import {
+  TextInput,
+  Button,
+  Text,
+  View,
+  StyleSheet,
+} from 'react-native';
+import { Formik　}  from 'formik';
 import * as yup from 'yup';
-import {Formik} from 'formik';
-
-import React, {Component, Fragment} from 'react';
-import {TextInput, Text, Alert, StyleSheet, View} from 'react-native';
 
 export default class App extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Formik
-          initialValues={{email: '', password: ''}}
-          validationSchema={yup.object().shape({
-            email: yup.string().email().required('これれれえr'),
-            password: yup
-              .string()
-              .min(6)
-              .required('ergジェrp:青gジェアポrgジェprgj」＠'),
-          })}>
-          {({values, handleChange, errors, setFieldTouched, touched}) => (
-            <Fragment>
+      <Formik 
+        initialValues={{ text: ''}}
+        onSubmit={values => alert("問題ありません")}
+        validationSchema={validationSchema} //validationSchemaの追加
+        >
+        {({ values, touched, errors, handleChange, handleBlur, handleSubmit }) => {
+          return (
+            <View>
               <TextInput
-                value={values.email}
-                onChangeText={handleChange('email')}
-                onBlur={() => setFieldTouched('email')}
-                placeholder="E-mail"
+                value={values.text}
+                onChangeText={handleChange('text')}
+                placeholder="Input Box"
+                onBlur={handleBlur('text')}
               />
-              {touched.email && errors.email && (
-                <Text style={{fontSize: 10, color: 'red'}}>{errors.email}</Text>
-              )}
-              <TextInput
-                value={values.password}
-                onChangeText={handleChange('password')}
-                placeholder="Password"
-                onBlur={() => setFieldTouched('password')}
-                secureTextEntry={true}
+              {
+                //touchedとerrorはtrueでしたらエラーメッセージを出力します
+                touched.text && errors.text &&
+                <Text style={styles.error}>{errors.text}</Text>
+              } 
+              <Button 
+                title='登録'
+                onPress = {handleSubmit}
               />
-              {touched.password && errors.password && (
-                <Text style={{fontSize: 10, color: 'red'}}>
-                  {errors.password}
-                </Text>
-              )}
-            </Fragment>
-          )}
-        </Formik>
+            </View>  
+          );
+      }}        
+      </Formik>
       </View>
     );
   }
 }
 
+//YupのvalidationSchema
+const validationSchema = yup.object().shape({
+  text: yup
+    .string() //型は文字列
+    .max(10, '10文字以下を入れてください')　//11文字以上だったらerrors.textは「10文字以下を入れてください」になる
+});
+
+
+
 const styles = StyleSheet.create({
+  error: {
+    color: 'red'
+  },
   container: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
-  },
+    justifyContent: 'center',
+  }
 });
